@@ -1,0 +1,32 @@
+import requests
+import pandas as pd
+
+# --- Configuração ---
+BASE_URL = "https://projetapesquisas.com.br/v1/projects/23/forms/Pesquisa%20Governo%2009-26.svc"
+USUARIO = "projetamapas@gmail.com"
+SENHA = "Projeta!2420ODK"
+TABELA = "Submissions"  # nome padrão da entidade principal no OData do ODK Central
+SAIDA = "Pesquisa_Governo_09-26.csv"
+
+def extrair_dados():
+    url = f"{BASE_URL}/{TABELA}"
+    auth = (USUARIO, SENHA)
+    registros = []
+
+    while url:
+        resp = requests.get(url, auth=auth)
+        resp.raise_for_status()
+        dados = resp.json()
+
+        registros.extend(dados.get("value", []))
+        url = dados.get("@odata.nextLink")  # pagina seguinte, se houver
+
+    return registros
+
+if __name__ == "__main__":
+    registros = extrair_dados()
+    print(f"Total de registros extraídos: {len(registros)}")
+
+    df = pd.json_normalize(registros)
+    df.to_csv(SAIDA, index=False, encoding="utf-8-sig")
+    print(f"Salvo em: {SAIDA}")

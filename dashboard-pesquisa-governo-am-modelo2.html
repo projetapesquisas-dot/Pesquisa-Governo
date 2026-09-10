@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pesquisa Governo AM — 09/2026 (modelo 2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --fundo: #EEF2F6;
+    --azul-noite: #10263F;
+    --azul-marinho: #1B4D77;
+    --azul-aco: #3E7CA6;
+    --azul-claro: #8FB8D6;
+    --areia: #E2A040;
+    --linha: #D6DEE6;
+    --texto: #16222E;
+    --texto-suave: #5B6C7C;
+    --branco: #FFFFFF;
+    --ouro: #C9A227;
+    --prata: #9AA7B0;
+    --bronze: #B0703C;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ background:var(--fundo); color:var(--texto); font-family:'Inter', sans-serif; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; }
+
+  .topo{ background:var(--azul-noite); color:var(--fundo); padding:2.2rem 1.4rem 1.8rem; position:relative; overflow:hidden; }
+  .topo::before{ content:""; position:absolute; right:-70px; top:-70px; width:240px; height:240px; border-radius:50%; border:1px solid rgba(238,242,246,0.14); }
+  .topo-conteudo{ max-width:1100px; margin:0 auto; position:relative; }
+  .topo-rotulo{ font-size:0.85rem; color:var(--areia); margin-bottom:0.5rem; }
+  .topo h1{ font-size:clamp(1.7rem, 4vw, 2.6rem); line-height:1.15; max-width:640px; }
+  .topo-meta{ display:flex; flex-wrap:wrap; gap:1.6rem; margin-top:1.4rem; font-size:0.92rem; color:rgba(238,242,246,0.85); }
+  .topo-meta div span{ display:block; color:var(--fundo); font-weight:600; }
+  .topo-meta div small{ color:rgba(238,242,246,0.55); font-size:0.78rem; }
+
+  .aviso{ max-width:1100px; margin:1.2rem auto 0; padding:0 1.4rem; }
+  .aviso p{ background:#E8F0F7; border:1px solid #C3D8E8; color:#26445F; font-size:0.85rem; padding:0.7rem 1rem; border-radius:6px; }
+
+  main{ max-width:1100px; margin:0 auto; padding:1.6rem 1.4rem 3rem; }
+  .secao{ margin-top:2.6rem; }
+  .secao-titulo{ display:flex; align-items:baseline; gap:0.7rem; margin-bottom:1.1rem; border-bottom:1px solid var(--linha); padding-bottom:0.6rem; }
+  .secao-titulo h2{ font-size:1.35rem; color:var(--azul-noite); }
+  .secao-titulo p{ font-size:0.85rem; color:var(--texto-suave); }
+
+  .grade{ display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
+  .grade3{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; }
+  @media (max-width:760px){ .grade{ grid-template-columns:1fr; } .grade3{ grid-template-columns:1fr; } }
+
+  .cartao{ background:var(--branco); border:1px solid var(--linha); border-radius:10px; padding:1.3rem 1.3rem 1.1rem; }
+  .cartao h3{ font-size:1.02rem; color:var(--texto); margin-bottom:0.2rem; font-weight:600; }
+  .cartao .subt{ font-size:0.8rem; color:var(--texto-suave); margin-bottom:1rem; }
+  .explicacao{ font-size:0.88rem; color:var(--texto-suave); margin-bottom:1.1rem; max-width:70ch; }
+
+  /* ---------- waffle (avaliação) ---------- */
+  .destaque{ grid-column:1 / -1; display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:center; }
+  @media (max-width:760px){ .destaque{ grid-template-columns:1fr; } }
+  .destaque-num{ font-family:'Fraunces', serif; font-size:3.2rem; color:var(--azul-marinho); line-height:1; }
+  .destaque-texto{ color:var(--texto-suave); font-size:0.92rem; margin-top:0.4rem; max-width:34ch; }
+  .waffle-grid{ display:grid; grid-template-columns:repeat(10,1fr); gap:3px; width:230px; flex-shrink:0; }
+  .waffle-quadrado{ aspect-ratio:1; border-radius:2px; }
+  .legenda-mini{ display:flex; flex-wrap:wrap; gap:0.9rem; margin-top:1rem; font-size:0.78rem; color:var(--texto-suave); }
+  .legenda-mini span{ display:inline-flex; align-items:center; gap:0.35rem; }
+  .pt{ width:9px; height:9px; border-radius:2px; display:inline-block; flex-shrink:0; }
+
+  /* ---------- pizza (avaliação e voto governo) ---------- */
+  .pizza-bloco{ display:flex; align-items:center; gap:1.6rem; flex-wrap:wrap; }
+  .pizza-grande{ width:190px; height:190px; border-radius:50%; flex-shrink:0; }
+  .pizza-media{ width:150px; height:150px; border-radius:50%; flex-shrink:0; margin:0 auto; }
+  .pizza-grande, .pizza-media{ display:flex; align-items:center; justify-content:center; position:relative; }
+  .pizza-centro{ font-family:'Fraunces', serif; color:var(--azul-marinho); font-weight:600; text-align:center; line-height:1.15; font-size:1.3rem; padding:0 8px; }
+  .pizza-centro small{ display:block; font-family:'Inter', sans-serif; font-weight:500; color:var(--texto-suave); font-size:0.6rem; margin-top:2px; }
+  .legenda-lista{ display:flex; flex-direction:column; gap:0.45rem; flex:1; min-width:160px; }
+  .legenda-lista-item{ display:flex; align-items:center; gap:0.5rem; font-size:0.82rem; color:var(--texto); }
+  .legenda-lista-item .pt{ width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+  .legenda-lista-item .valor{ margin-left:auto; font-weight:600; color:var(--azul-marinho); }
+  .pizza-card{ display:flex; flex-direction:column; align-items:center; gap:1rem; }
+
+  /* ---------- colunas verticais ---------- */
+  .colunas{ display:flex; align-items:flex-end; gap:0.7rem; height:200px; padding:1rem 0.2rem 0; }
+  .coluna{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; min-width:0; }
+  .coluna-valor{ font-size:0.72rem; font-weight:600; color:var(--azul-marinho); margin-bottom:4px; }
+  .coluna-barra{ width:70%; border-radius:5px 5px 0 0; min-height:2px; }
+  .coluna-rotulo{ font-size:0.64rem; color:var(--texto-suave); margin-top:8px; text-align:center; line-height:1.2; word-break:break-word; }
+
+  /* ---------- lollipop (senado) ---------- */
+  .lollipop{ display:flex; flex-direction:column; gap:0.7rem; }
+  .lollipop-linha{ display:grid; grid-template-columns:150px 1fr 38px; align-items:center; gap:0.7rem; }
+  .lollipop-rotulo{ font-size:0.8rem; color:var(--texto); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .lollipop-trilha{ position:relative; height:3px; background:var(--linha); border-radius:2px; }
+  .lollipop-haste{ position:absolute; top:0; left:0; height:3px; border-radius:2px; }
+  .lollipop-ponto{ position:absolute; top:50%; width:13px; height:13px; border-radius:50%; transform:translate(-50%,-50%); border:2px solid #fff; box-shadow:0 0 0 1px rgba(0,0,0,0.06); }
+  .lollipop-valor{ font-size:0.8rem; font-weight:600; color:var(--azul-marinho); text-align:right; }
+  @media (max-width:480px){ .lollipop-linha{ grid-template-columns:105px 1fr 34px; } .lollipop-rotulo{ font-size:0.72rem; } }
+
+  /* ---------- mini-pizzas por órgão ---------- */
+  .pizzas-grade{ display:grid; grid-template-columns:repeat(5,1fr); gap:1.1rem; }
+  @media (max-width:760px){ .pizzas-grade{ grid-template-columns:repeat(2,1fr); } }
+  .pizza-item{ text-align:center; }
+  .pizza-circulo{ width:96px; height:96px; border-radius:50%; margin:0 auto 0.6rem; }
+  .pizza-nome{ font-size:0.8rem; font-weight:600; color:var(--texto); }
+  .pizza-lider{ font-size:0.72rem; color:var(--texto-suave); margin-top:2px; }
+
+  /* ---------- pódio por órgão ---------- */
+  .podios{ display:grid; grid-template-columns:repeat(5,1fr); gap:1.1rem; }
+  @media (max-width:760px){ .podios{ grid-template-columns:repeat(2,1fr); } }
+  .podio-bloco{ text-align:center; }
+  .podio-titulo{ font-size:0.82rem; font-weight:600; color:var(--azul-noite); margin-bottom:0.7rem; }
+  .podio-base{ display:flex; align-items:flex-end; justify-content:center; gap:0.35rem; height:120px; }
+  .podio-coluna{ width:28%; border-radius:4px 4px 0 0; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding-top:4px; }
+  .podio-coluna span{ font-size:0.62rem; color:#fff; font-weight:600; }
+  .podio-nomes{ display:flex; justify-content:center; gap:0.35rem; margin-top:0.4rem; font-size:0.6rem; color:var(--texto-suave); }
+  .podio-nomes div{ width:28%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+  /* ---------- bolhas (cargos) ---------- */
+  .bolhas{ display:flex; align-items:flex-end; justify-content:space-around; gap:0.5rem; padding:1rem 0.4rem; flex-wrap:wrap; }
+  .bolha-item{ display:flex; flex-direction:column; align-items:center; gap:0.4rem; }
+  .bolha{ border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:600; font-size:0.78rem; }
+  .bolha-rotulo{ font-size:0.68rem; color:var(--texto-suave); text-align:center; max-width:80px; }
+
+  /* ---------- tabela entrevistados ---------- */
+  .tabela-entrevistados{ width:100%; border-collapse:collapse; font-size:0.88rem; }
+  .tabela-entrevistados th{ text-align:left; font-weight:600; color:var(--azul-marinho); padding:0.5rem 0.6rem; border-bottom:2px solid var(--linha); }
+  .tabela-entrevistados td{ padding:0.55rem 0.6rem; border-bottom:1px solid var(--linha); color:var(--texto); }
+  .tabela-entrevistados tr:last-child td{ border-bottom:none; }
+  .tabela-wrap{ overflow-x:auto; }
+
+  footer{ max-width:1100px; margin:0 auto; padding:1.4rem 1.4rem 2.4rem; color:var(--texto-suave); font-size:0.78rem; border-top:1px solid var(--linha); }
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-conteudo">
+    <div class="topo-rotulo">Pesquisa de opinião · Governo do Amazonas · modelo 2</div>
+    <h1>Avaliação de governo e intenção de voto — Amazonas</h1>
+    <div class="topo-meta">
+      <div><span>09/2026</span><small>Data da rodada</small></div>
+      <div><span>812 entrevistas</span><small>Amostra</small></div>
+      <div><span>± 3,4 p.p.</span><small>Margem de erro</small></div>
+      <div><span>Amazonas</span><small>Abrangência</small></div>
+    </div>
+  </div>
+</header>
+
+<div class="aviso">
+  <p>Segundo modelo do mesmo painel, com tipos de gráfico diferentes do primeiro (pictograma, colunas, lollipop, mini-pizzas e pódio) para você comparar qual comunica melhor. Números <strong>fictícios</strong> — troque no bloco <code>DADOS</code> no fim do arquivo.</p>
+</div>
+
+<main>
+
+  <!-- AVALIAÇÃO — PIZZA -->
+  <section class="secao">
+    <div class="secao-titulo">
+      <h2>Avaliação do governador</h2>
+      <p>Roberto Cidade — gráfico de rosca</p>
+    </div>
+    <div class="grade">
+      <div class="cartao destaque">
+        <div>
+          <div class="destaque-num" id="aprovaNum">—%</div>
+          <p class="destaque-texto">avaliam o governo como <strong>ótimo</strong> ou <strong>bom</strong>.</p>
+        </div>
+        <div class="pizza-bloco">
+          <div class="pizza-grande" id="pizzaAvaliacao"></div>
+          <div class="legenda-lista" id="legendaAvaliacao"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VOTO GOVERNO — PIZZA -->
+  <section class="secao">
+    <div class="secao-titulo">
+      <h2>Intenção de voto — Governo do Amazonas</h2>
+      <p>Espontânea, estimulada e rejeição — em rosca</p>
+    </div>
+    <div class="grade3">
+      <div class="cartao">
+        <h3>Voto espontâneo</h3>
+        <p class="subt">Sem lista de nomes</p>
+        <div class="pizza-card">
+          <div class="pizza-media" id="pizzaEspontaneo"></div>
+          <div class="legenda-lista" id="legendaEspontaneo"></div>
+        </div>
+      </div>
+      <div class="cartao">
+        <h3>Voto estimulado</h3>
+        <p class="subt">Com lista apresentada</p>
+        <div class="pizza-card">
+          <div class="pizza-media" id="pizzaEstimulado"></div>
+          <div class="legenda-lista" id="legendaEstimulado"></div>
+        </div>
+      </div>
+      <div class="cartao">
+        <h3>Rejeição</h3>
+        <p class="subt">Não votaria</p>
+        <div class="pizza-card">
+          <div class="pizza-media" id="pizzaRejeicaoGov"></div>
+          <div class="legenda-lista" id="legendaRejeicaoGov"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SENADO — LOLLIPOP -->
+  <section class="secao">
+    <div class="secao-titulo">
+      <h2>Intenção de voto — Senado</h2>
+      <p>1ª opção, 2ª opção e rejeição — em lollipop</p>
+    </div>
+    <div class="grade">
+      <div class="cartao">
+        <h3>1ª opção</h3>
+        <p class="subt">Voto estimulado</p>
+        <div class="lollipop" id="lollipopSenado1"></div>
+      </div>
+      <div class="cartao">
+        <h3>2ª opção</h3>
+        <p class="subt">Voto estimulado</p>
+        <div class="lollipop" id="lollipopSenado2"></div>
+      </div>
+      <div class="cartao" style="grid-column:1 / -1;">
+        <h3>Rejeição ao Senado</h3>
+        <p class="subt">Não votaria</p>
+        <div class="lollipop" id="lollipopRejeicaoSenado"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRUZAMENTO — MINI-PIZZAS + PÓDIO -->
+  <section class="secao">
+    <div class="secao-titulo">
+      <h2>Cruzamento: órgão x intenção de voto</h2>
+      <p>Mini-pizzas por órgão e pódio dos 3 mais votados</p>
+    </div>
+    <div class="grade" style="grid-template-columns:1fr;">
+      <div class="cartao">
+        <h3>Distribuição de voto por órgão</h3>
+        <p class="subt">Cada círculo é 100% dos entrevistados daquele órgão</p>
+        <div class="pizzas-grade" id="pizzasOrgao"></div>
+        <div class="legenda-mini" id="pizzasLegenda" style="margin-top:1.2rem;"></div>
+      </div>
+      <div class="cartao">
+        <h3>Pódio por órgão</h3>
+        <p class="subt">Os três mais votados, em formato de pódio</p>
+        <div class="podios" id="podiosOrgao"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERFIL — BOLHAS -->
+  <section class="secao">
+    <div class="secao-titulo">
+      <h2>Perfil dos entrevistados</h2>
+      <p>Distribuição por cargo — em bolhas</p>
+    </div>
+    <p class="explicacao">Os campos de órgão, nome e cargo identificam cada entrevistado. Abaixo, o tamanho da bolha representa o percentual de entrevistados em cada cargo.</p>
+    <div class="grade">
+      <div class="cartao">
+        <h3>Entrevistados por cargo</h3>
+        <p class="subt">Tamanho proporcional ao percentual</p>
+        <div class="bolhas" id="bolhasCargos"></div>
+      </div>
+      <div class="cartao">
+        <h3>Registros individuais</h3>
+        <p class="subt">Exemplos de preenchimento</p>
+        <div class="tabela-wrap">
+          <table class="tabela-entrevistados" id="tabelaEntrevistados">
+            <thead><tr><th>Órgão do estado</th><th>Nome</th><th>Cargo</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Pesquisa Governo 09-26 · modelo 2 do painel · números fictícios até a apuração real ser inserida.
+</footer>
+
+<script>
+/* =========================================================
+   DADOS — substitua os números e registros abaixo pelos reais
+   ========================================================= */
+const DADOS = {
+  avaliacao: { "Ótimo":14, "Bom":27, "Regular":30, "Ruim":16, "Péssimo":9, "NS/NR":4 },
+  espontaneo: { "Roberto Cidade":22, "David Almeida":19, "Omar Aziz":9, "Gilberto Vasconcelos":4, "Maria do Carmo":3, "Isael Munduruku":2, "Cabo Daciolo":2, "Branco/nulo":6, "NS/NR":33 },
+  estimulado: { "Roberto Cidade":29, "David Almeida":25, "Omar Aziz":11, "Gilberto Vasconcelos":6, "Maria do Carmo":4, "Isael Munduruku":3, "Cabo Daciolo":2, "Branco/nulo":8, "NS/NR":12 },
+  rejeicaoGoverno: { "Roberto Cidade":21, "David Almeida":18, "Omar Aziz":14, "Gilberto Vasconcelos":9, "Maria do Carmo":7, "Isael Munduruku":5, "Cabo Daciolo":6, "Branco/Nulo":3, "NS/NR":17 },
+  senado1: { "Eduardo Braga":24, "Plínio Valério":18, "Capitão Alberto Neto":15, "Wilson Lima":12, "Professora Evany":6, "Dailson Corrêa":3, "Evandro Oliveira":2, "Ismael Munduruku":2, "Xuxa do Amazonas":1, "Branco/Nulo":5, "NS/NR":12 },
+  senado2: { "Wilson Lima":17, "Plínio Valério":15, "Eduardo Braga":14, "Capitão Alberto Neto":13, "Professora Evany":8, "Dailson Corrêa":4, "Ismael Munduruku":3, "Evandro Oliveira":2, "Xuxa do Amazonas":1, "Branco/Nulo":6, "NS/NR":17 },
+  rejeicaoSenado: { "Eduardo Braga":19, "Capitão Alberto Neto":17, "Wilson Lima":16, "Plínio Valério":10, "Professora Evany":8, "Dailson Corrêa":5, "Evandro Oliveira":4, "Ismael Munduruku":3, "Xuxa do Amazonas":2, "Branco/Nulo":4, "NS/NR":12 },
+  orgaoVoto: {
+    "SEDUC": { "Roberto Cidade":30, "David Almeida":26, "Omar Aziz":9, "Gilberto Vasconcelos":5, "Outros/Branco/NS":30 },
+    "SUSAM": { "Roberto Cidade":24, "David Almeida":33, "Omar Aziz":12, "Gilberto Vasconcelos":4, "Outros/Branco/NS":27 },
+    "SSP-AM": { "Roberto Cidade":35, "David Almeida":20, "Omar Aziz":10, "Gilberto Vasconcelos":6, "Outros/Branco/NS":29 },
+    "SEFAZ": { "Roberto Cidade":28, "David Almeida":27, "Omar Aziz":15, "Gilberto Vasconcelos":3, "Outros/Branco/NS":27 },
+    "SEINFRA": { "Roberto Cidade":33, "David Almeida":24, "Omar Aziz":8, "Gilberto Vasconcelos":7, "Outros/Branco/NS":28 }
+  },
+  cargos: { "Secretário(a)":6, "Diretor(a)":14, "Coordenador(a)":22, "Assessor(a)":18, "Analista":25, "Técnico(a)":15 },
+  entrevistados: [
+    { orgao:"Sec. de Educação (SEDUC)", nome:"Maria Luiza Ferreira", cargo:"Coordenador(a) pedagógico(a)" },
+    { orgao:"Sec. de Saúde (SUSAM)", nome:"João Paulo Nogueira", cargo:"Analista de saúde" },
+    { orgao:"Sec. de Segurança (SSP-AM)", nome:"Ana Beatriz Correia", cargo:"Assessor(a) técnico(a)" },
+    { orgao:"Sec. de Fazenda (SEFAZ)", nome:"Carlos Eduardo Matos", cargo:"Diretor(a) de arrecadação" },
+    { orgao:"Sec. de Infraestrutura (SEINFRA)", nome:"Renata Souza Lima", cargo:"Técnico(a) de engenharia" }
+  ]
+};
+
+const PALETA = ["#10263F","#1B4D77","#3E7CA6","#8FB8D6","#E2A040","#6E93AC","#274A66","#9AC0D6","#173A5C","#A2432E","#5B6C7C"];
+
+/* ---------- avaliação: número em destaque ---------- */
+function montarAprovaNum(){
+  const positivos = DADOS.avaliacao["Ótimo"] + DADOS.avaliacao["Bom"];
+  document.getElementById('aprovaNum').textContent = positivos + '%';
+}
+
+/* ---------- rosca genérica (conic-gradient com furo) com legenda ---------- */
+function montarPizza(circuloId, legendaId, dados, coresCustom){
+  const labels = Object.keys(dados);
+  const valores = Object.values(dados);
+  const cores = coresCustom || labels.map((l,i)=> PALETA[i % PALETA.length]);
+
+  let acumulado = 0;
+  const partes = [];
+  labels.forEach((l,i)=>{
+    const inicio = acumulado;
+    acumulado += valores[i];
+    partes.push(cores[i] + ' ' + inicio + '% ' + acumulado + '%');
+  });
+  const circulo = document.getElementById(circuloId);
+  circulo.style.background =
+    'radial-gradient(circle closest-side, #fff 62%, transparent 63% 100%), conic-gradient(' + partes.join(', ') + ')';
+
+  const lider = labels.map((l,i)=>[l, valores[i]]).sort((a,b)=> b[1]-a[1])[0];
+  circulo.innerHTML = '<span class="pizza-centro">'+lider[1]+'%<small>'+lider[0]+'</small></span>';
+
+  const legenda = document.getElementById(legendaId);
+  labels.forEach((l,i)=>{
+    const item = document.createElement('div');
+    item.className = 'legenda-lista-item';
+    item.innerHTML = '<span class="pt" style="background:'+cores[i]+'"></span><span>'+l+'</span><span class="valor">'+valores[i]+'%</span>';
+    legenda.appendChild(item);
+  });
+}
+
+/* ---------- colunas verticais ---------- */
+function montarColunas(containerId, dados, maxSugerido){
+  const container = document.getElementById(containerId);
+  const labels = Object.keys(dados);
+  const max = maxSugerido || Math.max(...Object.values(dados), 10);
+  labels.forEach((l,i)=>{
+    const valor = dados[l];
+    const col = document.createElement('div');
+    col.className = 'coluna';
+    const alturaPct = Math.max((valor / max) * 100, 2);
+    col.innerHTML =
+      '<span class="coluna-valor">'+valor+'%</span>' +
+      '<div class="coluna-barra" style="height:'+alturaPct+'%; background:'+PALETA[i % PALETA.length]+';"></div>' +
+      '<span class="coluna-rotulo">'+l+'</span>';
+    container.appendChild(col);
+  });
+}
+
+/* ---------- lollipop ---------- */
+function montarLollipop(containerId, dados, maxSugerido){
+  const container = document.getElementById(containerId);
+  const labels = Object.keys(dados);
+  const max = maxSugerido || Math.max(...Object.values(dados), 10);
+  labels.forEach((l,i)=>{
+    const valor = dados[l];
+    const pct = Math.max((valor / max) * 100, 2);
+    const cor = PALETA[i % PALETA.length];
+    const linha = document.createElement('div');
+    linha.className = 'lollipop-linha';
+    linha.innerHTML =
+      '<span class="lollipop-rotulo" title="'+l+'">'+l+'</span>' +
+      '<div class="lollipop-trilha"><div class="lollipop-haste" style="width:'+pct+'%; background:'+cor+';"></div><div class="lollipop-ponto" style="left:'+pct+'%; background:'+cor+';"></div></div>' +
+      '<span class="lollipop-valor">'+valor+'%</span>';
+    container.appendChild(linha);
+  });
+}
+
+/* ---------- mini-pizzas por órgão ---------- */
+function montarPizzas(){
+  const orgaos = Object.keys(DADOS.orgaoVoto);
+  const candidatos = Object.keys(DADOS.orgaoVoto[orgaos[0]]);
+  const cores = ["#1B4D77","#3E7CA6","#8FB8D6","#E2A040","#C9D3DB"];
+
+  const grade = document.getElementById('pizzasOrgao');
+  orgaos.forEach(o=>{
+    let acumulado = 0;
+    const partes = [];
+    candidatos.forEach((cand,i)=>{
+      const valor = DADOS.orgaoVoto[o][cand];
+      const inicio = acumulado;
+      acumulado += valor;
+      partes.push(cores[i] + ' ' + inicio + '% ' + acumulado + '%');
+    });
+    const lider = Object.entries(DADOS.orgaoVoto[o]).sort((a,b)=>b[1]-a[1])[0];
+    const item = document.createElement('div');
+    item.className = 'pizza-item';
+    item.innerHTML =
+      '<div class="pizza-circulo" style="background:conic-gradient('+partes.join(', ')+')"></div>' +
+      '<div class="pizza-nome">'+o+'</div>' +
+      '<div class="pizza-lider">'+lider[0]+' · '+lider[1]+'%</div>';
+    grade.appendChild(item);
+  });
+
+  const legenda = document.getElementById('pizzasLegenda');
+  candidatos.forEach((cand,i)=>{
+    const it = document.createElement('span');
+    it.innerHTML = '<span class="pt" style="background:'+cores[i]+'"></span>' + cand;
+    legenda.appendChild(it);
+  });
+}
+
+/* ---------- pódio por órgão ---------- */
+function montarPodios(){
+  const orgaos = Object.keys(DADOS.orgaoVoto);
+  const coresPodio = { 0:"var(--ouro)", 1:"var(--prata)", 2:"var(--bronze)" };
+  const ordemVisual = [1,0,2]; // 2º, 1º, 3º — efeito degrau
+
+  const container = document.getElementById('podiosOrgao');
+  orgaos.forEach(o=>{
+    const top3 = Object.entries(DADOS.orgaoVoto[o]).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    const maxValor = top3[0][1];
+
+    const bloco = document.createElement('div');
+    bloco.className = 'podio-bloco';
+    const titulo = document.createElement('div');
+    titulo.className = 'podio-titulo';
+    titulo.textContent = o;
+    bloco.appendChild(titulo);
+
+    const base = document.createElement('div');
+    base.className = 'podio-base';
+    ordemVisual.forEach(posicao=>{
+      const item = top3[posicao];
+      if(!item) return;
+      const alturaPct = Math.max((item[1] / maxValor) * 100, 20);
+      const col = document.createElement('div');
+      col.className = 'podio-coluna';
+      col.style.height = alturaPct + '%';
+      col.style.background = coresPodio[posicao];
+      col.innerHTML = '<span>'+(posicao+1)+'º</span>';
+      base.appendChild(col);
+    });
+    bloco.appendChild(base);
+
+    const nomes = document.createElement('div');
+    nomes.className = 'podio-nomes';
+    ordemVisual.forEach(posicao=>{
+      const item = top3[posicao];
+      if(!item) return;
+      const d = document.createElement('div');
+      d.title = item[0] + ' — ' + item[1] + '%';
+      d.textContent = item[0].split(' ')[0] + ' ' + item[1] + '%';
+      nomes.appendChild(d);
+    });
+    bloco.appendChild(nomes);
+
+    container.appendChild(bloco);
+  });
+}
+
+/* ---------- bolhas (cargos) ---------- */
+function montarBolhas(){
+  const container = document.getElementById('bolhasCargos');
+  const labels = Object.keys(DADOS.cargos);
+  const max = Math.max(...Object.values(DADOS.cargos));
+  labels.forEach((l,i)=>{
+    const valor = DADOS.cargos[l];
+    const tamanho = 46 + (valor / max) * 64; // entre 46px e 110px
+    const item = document.createElement('div');
+    item.className = 'bolha-item';
+    item.innerHTML =
+      '<div class="bolha" style="width:'+tamanho+'px; height:'+tamanho+'px; background:'+PALETA[i % PALETA.length]+';">'+valor+'%</div>' +
+      '<div class="bolha-rotulo">'+l+'</div>';
+    container.appendChild(item);
+  });
+}
+
+function montarTabelaEntrevistados(){
+  const corpo = document.querySelector('#tabelaEntrevistados tbody');
+  DADOS.entrevistados.forEach(e=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>'+e.orgao+'</td><td>'+e.nome+'</td><td>'+e.cargo+'</td>';
+    corpo.appendChild(tr);
+  });
+}
+
+montarAprovaNum();
+montarPizza('pizzaAvaliacao', 'legendaAvaliacao', DADOS.avaliacao, ["#1B4D77","#5C8DAE","#E2A040","#C97A3E","#A2432E","#C9D3DB"]);
+montarPizza('pizzaEspontaneo', 'legendaEspontaneo', DADOS.espontaneo);
+montarPizza('pizzaEstimulado', 'legendaEstimulado', DADOS.estimulado);
+montarPizza('pizzaRejeicaoGov', 'legendaRejeicaoGov', DADOS.rejeicaoGoverno);
+montarLollipop('lollipopSenado1', DADOS.senado1, 25);
+montarLollipop('lollipopSenado2', DADOS.senado2, 20);
+montarLollipop('lollipopRejeicaoSenado', DADOS.rejeicaoSenado, 20);
+montarPizzas();
+montarPodios();
+montarBolhas();
+montarTabelaEntrevistados();
+</script>
+
+</body>
+</html>
